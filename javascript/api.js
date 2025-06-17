@@ -2,8 +2,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatForm = document.getElementById("chat-form");
     const userInput = document.getElementById("user-input");
     const chatMessages = document.getElementById("chat-messages");
+    const chatContainer = document.getElementsByClassName('chat-container')
 
     const OLLAMA_API_URL = "http://localhost:11434/api/chat";
+    const username = "Moi"
 
     let conversationHistory = [];
 
@@ -18,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const hours = String(currDate.getHours())
         let minutes = String(currDate.getMinutes())
 
-        while(minutes.length < 2){
+        while (minutes.length < 2) {
             minutes = "0".concat(minutes);
         }
 
@@ -39,19 +41,32 @@ document.addEventListener("DOMContentLoaded", function () {
         textElementsContainer.appendChild(textElement);
 
         messageElement.appendChild(textElementsContainer)
+
+        const tail = document.createElement('img')
+
+        if (sender === username) {
+            tail.src = "./assets/images/blue-tail.png"
+        }
+        else {
+            tail.src = "./assets/images/orange-tail.png"
+        }
+
+        tail.classList = "textTail"
+        messageElement.appendChild(tail)
         messageElement.appendChild(date)
 
         const wrapper = document.createElement('div')
         wrapper.appendChild(messageElement)
 
-        if(sender === "User"){
+        if (sender === username) {
             wrapper.classList = "userMessage"
         }
-        else{
+        else {
             wrapper.classList = "botMessage"
         }
 
         chatMessages.appendChild(wrapper);
+        setTimeout(() => wrapper.scrollIntoView({ behavior: "smooth" }), 600)
     }
 
     appendMessage("Chat Botté", "Bonjour ! Comment puis-je vous aider aujourd'hui ?")
@@ -61,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const userMessage = userInput.value.trim();
         if (!userMessage) return;
 
-        appendMessage("User", userMessage);
+        appendMessage(username, userMessage);
         userInput.value = "";
         userInput.focus();
 
