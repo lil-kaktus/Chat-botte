@@ -2,12 +2,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatForm = document.getElementById("chat-form");
     const userInput = document.getElementById("user-input");
     const chatMessages = document.getElementById("chat-messages");
-    const chatContainer = document.getElementsByClassName('chat-container')
+    const resetBtn = document.getElementById('resetBtn')
+    const loader = document.getElementById('loading-indicator')
 
     const OLLAMA_API_URL = "http://localhost:11434/api/chat";
     const username = "Moi"
+    const botname = "Chat Botté"
 
     let conversationHistory = [];
+
+    function loadLocalHistory() {
+
+        const history = localStorage.getItem('conversationHistory')
+
+        if (history) {
+            chatMessages.innerHTML = ""
+
+            conversationHistory = JSON.parse(history)
+
+            conversationHistory.forEach((element) => {
+                appendMessage(element.role === "user" ? username : botname, element.content)
+            })
+        }
+        else {
+            appendMessage(botname, "Bonjour ! Comment puis-je vous aider aujourd'hui ?")
+            console.log('unloaded')
+        }
+    }
+
+    loadLocalHistory()
 
     function appendMessage(sender, text) {
         const messageElement = document.createElement("div");
@@ -66,10 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         chatMessages.appendChild(wrapper);
-        setTimeout(() => wrapper.scrollIntoView({ behavior: "smooth" }), 600)
+        setTimeout(() => wrapper.scrollIntoView({ behavior: "smooth" }), 500)
     }
-
-    appendMessage("Chat Botté", "Bonjour ! Comment puis-je vous aider aujourd'hui ?")
 
     chatForm.addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -79,6 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage(username, userMessage);
         userInput.value = "";
         userInput.focus();
+
+        toggleLoaderVisibility(true)
 
         try {
             conversationHistory.push({
@@ -113,7 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 content: data.message.content,
             });
 
-            appendMessage("Chat Botté", data.message.content);
+            appendMessage(botname, data.message.content);
+            saveToLocal()
+
         } catch (error) {
             console.error(
                 "Erreur lors de la communication avec Ollama:",
@@ -123,6 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Système",
                 "Désolé, une erreur est survenue lors de la communication avec l'IA."
             );
+        }
+        finally{
+            toggleLoaderVisibility(false)
         }
     });
 
@@ -146,5 +174,37 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    function saveToLocal() {
+        localStorage.setItem(
+            "conversationHistory",
+            JSON.stringify(conversationHistory)
+        )
+    }
+
+    function resetChat() {
+        conversationHistory = []
+        chatMessages.innerHTML = ""
+
+        userInput.value = ""
+        userInput.focus()
+
+        localStorage.removeItem('conversationHistory')
+
+        appendMessage(botname, "Bonjour ! Comment puis-je vous aider aujourd'hui ?")
+    }
+
+    resetBtn.addEventListener('click', resetChat)
+
+    function toggleLoaderVisibility(visible){
+        if(loader){
+            if(visible){
+                loader.classList.remove('loader-hidden')
+            }
+            else{
+                loader.classList.add('loader-hidden')
+            }
+        }
     }
 });

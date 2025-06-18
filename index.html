@@ -6,19 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Botté</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="assets/images/chat _botté.svg">
+    <link rel="icon" href="assets/images/chat-botte-orange.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
     <div id="title">
-        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="535.000000pt" height="466.000000pt"
-            viewBox="0 0 535.000000 466.000000" preserveAspectRatio="xMidYMid meet">
+        <div id="textTitle">
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="535.000000pt" height="466.000000pt"
+                viewBox="0 0 535.000000 466.000000" preserveAspectRatio="xMidYMid meet">
 
-            <g transform="translate(0.000000,466.000000) scale(0.100000,-0.100000)" stroke="none">
-                <path d="M1090 3859 c-85 -168 -134 -355 -149 -567 -19 -271 24 -520 140 -804
+                <g transform="translate(0.000000,466.000000) scale(0.100000,-0.100000)" stroke="none">
+                    <path d="M1090 3859 c-85 -168 -134 -355 -149 -567 -19 -271 24 -520 140 -804
         l40 -97 -50 -74 c-94 -140 -140 -250 -157 -379 -4 -26 -11 -48 -16 -48 -15 0
         -413 -62 -416 -65 -2 -1 7 -51 19 -110 l23 -107 45 6 c25 4 115 17 199 30 83
         12 152 21 152 20 0 -1 7 -37 15 -80 8 -43 14 -78 12 -79 -1 -1 -80 -48 -175
@@ -44,17 +46,21 @@
         78 0 26 2 27 55 27 l54 0 6 -37 c23 -134 108 -238 230 -280 72 -24 186 -14
         254 22 61 34 120 97 152 163 l22 45 -76 153 c-42 83 -77 155 -77 158 0 3 99 6
         220 6 121 0 220 -2 220 -5z" />
-            </g>
-        </svg>
-        <h1>Chat Botté</h1>
+                </g>
+            </svg>
+            <h1>Chat Botté</h1>
+        </div>
+
+        <button id="resetBtn">
+            <img src="./assets/images/reset-btn.png">
+        </button>
     </div>
 
     <div class="chat-container">
 
         <div id="chat-messages" class="chat-messages"></div>
-
-        <div id="loading-indicator" class="loading-indicator" style="display: none;">
-            En attente de réponse...
+        <div id="loading-indicator" class="loader-hidden">
+            <div class="spinner"></div>
         </div>
 
     </div>

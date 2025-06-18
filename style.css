@@ -18,7 +18,7 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     height: 100vh
 }
@@ -29,8 +29,18 @@ body {
     justify-content: center;
     width: 100%;
     background-color: var(--main-black);
+    height: 20vh;
     position: sticky;
     top: 0;
+    position: relative;
+}
+
+#textTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: auto
 }
 
 h1 {
@@ -51,6 +61,34 @@ svg g {
     fill: var(--main-orange)
 }
 
+#resetBtn {
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translateY(-50%);
+    margin-right: 35px;
+    border-radius: 65px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-black);
+}
+
+#resetBtn:hover{
+    cursor: pointer;
+}
+
+#resetBtn img {
+    width: 65px;
+    height: 65px;
+    transition: all 0.5s ease;
+}
+
+#resetBtn:hover img{
+    transform: rotate(360deg) scale(1.1);
+}
+
 .chat-container {
     width: 80%;
     height: 100%;
@@ -58,12 +96,12 @@ svg g {
     margin: none;
     background-color: none;
     border: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    position: relative;
 }
 
 .chat-container::-webkit-scrollbar {
@@ -85,8 +123,7 @@ svg g {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 95vw;
-    max-width: 95%;
+    width: 100vw;
     position: sticky;
     bottom: 0;
     background-color: var(--main-black);
@@ -205,6 +242,19 @@ svg g {
     float: left
 }
 
+.loader-hidden{
+    opacity: 0 !important
+}
+
+.spinner{
+    width: 60px;
+    height: 60px;
+    border: 15px solid var(--second-black);
+    border-radius: 50%;
+    border-left: 15px solid var(--main-orange);
+    animation: spinAnimation 0.8s ease infinite;
+}
+
 @keyframes messageTransition {
     from {
         opacity: 0;
@@ -214,6 +264,15 @@ svg g {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes spinAnimation{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
     }
 }
 
@@ -229,24 +288,49 @@ svg g {
     .bouton {
         width: 20%;
     }
+
+    #title {
+        justify-content: flex-start;
+    }
+
+    #textTitle {
+        margin-left: 15px
+    }
+
+    #textTitle h1 {
+        margin-left: 0;
+    }
 }
 
 @media (max-width: 480px) {
 
     .userMessage .textElementsContainer,
     .botMessage .textElementsContainer {
-        font-size: 1.4rem
+        font-size: 1.3rem
     }
 
-    #title{
-        margin: 15px 0px
+    #title {
+        padding: 0 10px;
     }
 
-    #title h1{
-        font-size: 2.5rem
+    #title h1 {
+        font-size: 2.5rem;
     }
 
-    .bouton img{
-        width: 50px
+    #textTitle {
+        margin: 0;
+        margin-left: 15px;
+    }
+
+    #resetBtn {
+        margin-right: 10px;
+    }
+
+    #resetBtn img {
+        transform: scale(70%);
+    }
+
+    .bouton img {
+        transform: scale(70%)
     }
 }
