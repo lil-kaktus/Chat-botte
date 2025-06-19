@@ -3,7 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const userInput = document.getElementById("user-input");
     const chatMessages = document.getElementById("chat-messages");
     const resetBtn = document.getElementById('resetBtn')
-    const loader = document.getElementById('loading-indicator')
+    const nightThemeBtn = document.getElementById('switchThemeBtn')
+
+    const toolbarBtn = document.getElementById('toolbar-btn')
+    const mobileToolbarContainer = document.getElementById('mobile-toolbar-container')
+    const resetBtnMobile = document.getElementById('resetBtnMobileToolbar')
+    const nightThemeBtnMobile = document.getElementById('switchThemeBtnMobileToolbar')
+
+    const messageTimeout = 250
 
     const OLLAMA_API_URL = "http://localhost:11434/api/chat";
     const username = "Moi"
@@ -89,7 +96,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         chatMessages.appendChild(wrapper);
-        setTimeout(() => wrapper.scrollIntoView({ behavior: "smooth" }), 500)
+
+        setTimeout(() => tail.scrollIntoView({ behavior: "smooth" }), messageTimeout)
     }
 
     chatForm.addEventListener("submit", async function (event) {
@@ -101,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         userInput.value = "";
         userInput.focus();
 
-        toggleLoaderVisibility(true)
+        appendLoader()
 
         try {
             conversationHistory.push({
@@ -149,8 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Désolé, une erreur est survenue lors de la communication avec l'IA."
             );
         }
-        finally{
-            toggleLoaderVisibility(false)
+        finally {
+            removeLoader()
         }
     });
 
@@ -184,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function resetChat() {
+        removeLoader()
         conversationHistory = []
         chatMessages.innerHTML = ""
 
@@ -195,16 +204,81 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage(botname, "Bonjour ! Comment puis-je vous aider aujourd'hui ?")
     }
 
-    resetBtn.addEventListener('click', resetChat)
+    if (resetBtn) resetBtn.addEventListener('click', resetChat);
+    if (resetBtnMobile) resetBtnMobile.addEventListener('click', () => {resetChat(); hideMobileToolbar()});
 
-    function toggleLoaderVisibility(visible){
-        if(loader){
-            if(visible){
-                loader.classList.remove('loader-hidden')
+    function appendLoader() {
+        const loaderWrapper = document.createElement('div')
+        loaderWrapper.id = "loading-indicator"
+
+        const loader = document.createElement('div')
+        loader.classList.add('spinner')
+
+        loaderWrapper.appendChild(loader)
+        chatMessages.appendChild(loaderWrapper)
+    }
+
+    function removeLoader() {
+        const loaderWrapper = document.querySelector('#loading-indicator')
+        if (loaderWrapper) {
+            loaderWrapper.classList.add('fadeOutLoader')
+            setTimeout(() => chatMessages.removeChild(loaderWrapper), messageTimeout)
+        }
+    }
+
+    function applyColorMode(mode) {
+        document.documentElement.setAttribute("data-theme", mode)
+        localStorage.setItem("themePreference", mode)
+
+        const resetImg = document.querySelector('#resetBtn img');
+        const resetMobileImg = document.querySelector('#resetBtnMobileToolbar img')
+
+        if (resetImg) {
+            if (mode === "light") {
+                resetImg.src = "./assets/images/light-reset-btn.png"
+                resetMobileImg.src = "./assets/images/light-reset-btn.png"
             }
-            else{
-                loader.classList.add('loader-hidden')
+            else {
+                resetImg.src = "./assets/images/reset-btn.png"
+                resetMobileImg.src = "./assets/images/reset-btn.png"
             }
         }
+    }
+
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem('themePreference')
+        if (currentTheme === "dark") {
+            applyColorMode("light")
+        }
+        else {
+            applyColorMode("dark")
+        }
+    }
+    (function initializeTheme() {
+        const savedTheme = localStorage.getItem("themePreference")
+        if (savedTheme) {
+            applyColorMode(savedTheme)
+        }
+        else {
+            applyColorMode("dark")
+        }
+    })();
+
+    if (nightThemeBtn) nightThemeBtn.addEventListener('click', toggleTheme)
+    if (nightThemeBtnMobile) nightThemeBtnMobile.addEventListener('click', () => { toggleTheme(); hideMobileToolbar() })
+
+    toolbarBtn.addEventListener('click', (e) => {
+        mobileToolbarContainer.classList.toggle('hidden-toolbar')
+    })
+
+    window.addEventListener("resize", () => {
+        const isMobile = window.innerWidth <= 768;
+        if (!isMobile) {
+            hideMobileToolbar()
+        }
+    })
+
+    function hideMobileToolbar() {
+        mobileToolbarContainer.classList.add('hidden-toolbar');
     }
 });

@@ -3,13 +3,21 @@
     --second-blue: #00ABE7;
     --main-black: #171D1C;
     --second-black: #474b4a;
+    --third-black: #2a2c2c;
     --main-orange: #db921b;
+    --main-white: #ffffff;
 }
 
 * {
     font-family: "Roboto", Verdana;
     box-sizing: border-box;
 }
+
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
 
 body {
     background-color: var(--main-black);
@@ -33,6 +41,8 @@ body {
     position: sticky;
     top: 0;
     position: relative;
+    overflow: visible;
+    z-index: 10
 }
 
 #textTitle {
@@ -52,41 +62,67 @@ h1 {
     font-weight: 900;
 }
 
-svg {
+#textTitle svg {
     width: 80px;
     height: 80px;
 }
 
-svg g {
+#textTitle svg g {
     fill: var(--main-orange)
 }
 
-#resetBtn {
+#toolbar {
     position: absolute;
     top: 50%;
     right: 0%;
     transform: translateY(-50%);
     margin-right: 35px;
-    border-radius: 65px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#toolbar-btn {
+    display: none !important;
+}
+
+#toolbar-btn svg path{
+    fill: var(--second-black);
+}
+
+#toolbar button {
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--main-black);
+    background-color: var(--main-black)
 }
 
-#resetBtn:hover{
+#toolbar button:hover {
     cursor: pointer;
 }
 
-#resetBtn img {
+#toolbar button svg, #toolbar button img {
     width: 65px;
     height: 65px;
     transition: all 0.5s ease;
 }
 
-#resetBtn:hover img{
+#resetBtn:hover img {
     transform: rotate(360deg) scale(1.1);
+}
+
+#switchThemeBtn svg {
+    transform: scale(0.8);
+}
+
+#switchThemeBtn svg path {
+    fill: var(--second-black) !important
+}
+
+#switchThemeBtn:hover svg {
+    transform: scale(1);
 }
 
 .chat-container {
@@ -140,13 +176,17 @@ svg g {
     height: 70px;
     width: 50%;
     background-color: var(--second-black);
-    color: white;
+    color: var(--main-white);
     font-weight: 400;
+}
+
+#user-input::placeholder {
+    color: var(--main-white)
 }
 
 .bouton {
     background-color: var(--main-blue);
-    color: white;
+    color: var(--main-white);
     border: none;
     padding: 10px 15px;
     border-radius: 25px;
@@ -175,9 +215,9 @@ svg g {
     word-wrap: break-word;
     background-clip: padding-box;
     width: 100%;
-    color: white;
+    color: var(--main-white);
     margin-top: 0px;
-    animation: messageTransition 0.5s ease;
+    animation: messageTransition 0.25s ease;
 }
 
 .userMessage .textElementsContainer {
@@ -206,9 +246,9 @@ svg g {
     word-wrap: break-word;
     background-clip: padding-box;
     width: 100%;
-    color: white;
+    color: var(--main-white);
     margin-top: 20px;
-    animation: messageTransition 0.5s ease;
+    animation: messageTransition 0.25s ease;
 }
 
 .botMessage .textElementsContainer {
@@ -232,6 +272,8 @@ svg g {
 .messageDate {
     padding: 5px 10px;
     display: inline;
+    color: var(--main-white);
+    font-weight: 400;
 }
 
 .botMessage .messageDate {
@@ -242,17 +284,32 @@ svg g {
     float: left
 }
 
-.loader-hidden{
-    opacity: 0 !important
-}
-
-.spinner{
+.spinner {
     width: 60px;
     height: 60px;
     border: 15px solid var(--second-black);
     border-radius: 50%;
     border-left: 15px solid var(--main-orange);
     animation: spinAnimation 0.8s ease infinite;
+}
+
+#loading-indicator {
+    transition: all 0.5s ease;
+    animation: fadeIn 0.5s ease
+}
+
+.fadeOutLoader {
+    opacity: 0
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes messageTransition {
@@ -267,11 +324,12 @@ svg g {
     }
 }
 
-@keyframes spinAnimation{
-    from{
+@keyframes spinAnimation {
+    from {
         transform: rotate(0deg);
     }
-    to{
+
+    to {
         transform: rotate(360deg);
     }
 }
@@ -291,6 +349,7 @@ svg g {
 
     #title {
         justify-content: flex-start;
+        overflow: visible !important;
     }
 
     #textTitle {
@@ -298,7 +357,25 @@ svg g {
     }
 
     #textTitle h1 {
-        margin-left: 0;
+        margin: 0;
+    }
+
+    #resetBtn, #switchThemeBtn{
+        display: none !important;
+    }
+
+    #toolbar-btn{
+        display: block !important;
+        transform: scale(75%);
+        transition: transform 0.3s ease;
+    }
+
+    #toolbar-btn:hover{
+        transform: scale(90%);
+    }
+
+    .bouton img {
+        transform: scale(85%)
     }
 }
 
@@ -309,28 +386,87 @@ svg g {
         font-size: 1.3rem
     }
 
-    #title {
-        padding: 0 10px;
-    }
-
     #title h1 {
-        font-size: 2.5rem;
+        font-size: 10vw;
     }
 
     #textTitle {
         margin: 0;
-        margin-left: 15px;
+        margin-left: 10px;
+        justify-content: flex-start !important;
     }
 
-    #resetBtn {
+    #textTitle svg{
+        width: 15vw
+    }
+
+    #toolbar {
         margin-right: 10px;
-    }
-
-    #resetBtn img {
-        transform: scale(70%);
     }
 
     .bouton img {
         transform: scale(70%)
     }
+}
+
+.hidden-toolbar{
+    display: none !important
+}
+
+#mobile-toolbar-container{
+    position: absolute;
+    top: 110%;
+    z-index: 10;
+    background-color: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: none;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 5px solid var(--second-black);
+    max-width: 80vw;
+}
+
+#mobile-toolbar-container button:not(:first-child){
+    border-top: 5px solid var(--second-black);
+}
+
+#mobile-toolbar-container button{
+    width: 100%;
+    background-color: var(--main-black);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#mobile-toolbar-container button:hover{
+    background-color: var(--third-black);
+}
+
+#mobile-toolbar-container button p{
+    color: var(--second-black);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: fit-content;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px 10px
+}
+
+#mobile-toolbar-container button svg path{
+    fill: var(--second-black)
+}
+
+html[data-theme="light"] {
+    --main-blue: #0081AF;
+    --second-blue: #00ABE7;
+    --main-black: #dfdfdf;
+    --second-black: #b6b6b6;
+    --third-black: #949494;
+    --main-orange: #db921b;
+    --main-white: #000000;
 }
